@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --color-bg-0: #07090f;
+  --color-bg-1: #0d111c;
+  --color-bg-2: #141b2d;
+  --color-accent: #5eead4;
+  --color-accent-2: #818cf8;
+  --color-danger: #fb7185;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 10% -10%, #1e293b 0%, transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, #312e81 0%, transparent 50%), var(--color-bg-0);
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+}
+
+.glass {
+  background: color-mix(in srgb, var(--color-bg-2) 82%, transparent);
+  border: 1px solid color-mix(in srgb, #94a3b8 18%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.score-ring {
+  background: conic-gradient(var(--color-accent) calc(var(--score) * 1%), #1f2937 0);
+}
+
+.hero-auto {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(94, 234, 212, 0.25);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.08);
+}
+
+.btn-hero {
+  background: linear-gradient(90deg, #2dd4bf, #818cf8);
+  color: #041018;
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-hero:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(129, 140, 248, 0.5);
+}
+
+.impact-meter {
+  display: inline-flex;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.impact-pill-high {
+  color: #5eead4;
+}
+.impact-pill-med {
+  color: #a5b4fc;
+}
+.impact-pill-low {
+  color: #94a3b8;
+}
