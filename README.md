@@ -2,7 +2,7 @@
 
 **BoostX** is a Windows desktop optimizer for competitive gaming (CS2, VALORANT, Fortnite, and similar titles). It scans your hardware, applies safe Windows tweaks with full backup/revert, surfaces per-game guidance, and walks you through BIOS settings—without ever writing firmware.
 
-Built with **Tauri 2** (Rust backend) and **React + TypeScript** (dark gaming UI). **Current release: v0.4.0**
+Built with **Tauri 2** (Rust backend) and **React + TypeScript** (dark gaming UI). **Current release: v0.5.0**
 
 ## Features
 
@@ -11,6 +11,7 @@ Built with **Tauri 2** (Rust backend) and **React + TypeScript** (dark gaming UI
 | Hardware scan (CPU/GPU/RAM/storage/board/BIOS/monitor/Windows) + performance score | Implemented (WMI on Windows; demo data elsewhere) |
 | Hone-style tweak catalog with detect / apply / verify / revert | Implemented (powercfg GUID, netsh, registry inference) |
 | Performance tab: game affinity watcher, timer service, NVIDIA power boost + temp guard | Implemented (AMD GPU/fans: guidance) |
+| **Auto Optimize** — one-click baseline → per-tweak A/B benchmarks → keep/revert → report card | Implemented (runs locally; CS2 live when installed) |
 | CS2 competitive benchmark (PresentMon live + labeled micro-bench fallback) | Implemented |
 | Live benchmark charts (FPS, frametime spikes, CPU/GPU via nvidia-smi when available) | Implemented |
 | System Restore point + per-value registry backup | Implemented |
