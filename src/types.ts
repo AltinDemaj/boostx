@@ -75,6 +75,13 @@ export interface SystemReport {
   scanWarnings: string[];
 }
 
+export interface ImpactRatings {
+  fps: ImpactLevel;
+  lows: ImpactLevel;
+  latency: ImpactLevel;
+  note: string;
+}
+
 export interface TweakDefinition {
   id: string;
   name: string;
@@ -83,9 +90,53 @@ export interface TweakDefinition {
   category: TweakCategory;
   risk: RiskLevel;
   impact: ImpactLevel;
+  impactRatings?: ImpactRatings;
   requiresReboot: boolean;
   profiles: OptimizationProfile[];
   guidanceOnly: boolean;
+}
+
+export interface AutoOptimizeProgress {
+  phase: string;
+  message: string;
+  current: number;
+  total: number;
+  etaSecs: number;
+  liveFps: number;
+  liveJitterMs: number;
+}
+
+export interface BenchStats {
+  avgFps: number;
+  p1Fps: number;
+  jitterMs: number;
+  varianceFps: number;
+  source: string;
+  runs: number;
+}
+
+export interface TweakTrialResult {
+  tweakId: string;
+  tweakName: string;
+  verdict: string;
+  deltaAvgFps: number;
+  deltaP1Fps: number;
+  deltaJitterMs: number;
+  detail: string;
+}
+
+export interface AutoOptimizeReport {
+  id: string;
+  startedAt: string;
+  finishedAt: string;
+  cancelled: boolean;
+  baseline: BenchStats;
+  finalStats: BenchStats;
+  keptTweakIds: string[];
+  revertedTweakIds: string[];
+  skippedTweakIds: string[];
+  trials: TweakTrialResult[];
+  summary: string;
 }
 
 export interface TweakState {
