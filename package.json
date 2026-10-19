@@ -1,0 +1,33 @@
+{
+  "name": "boostx",
+  "private": true,
+  "version": "0.5.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "build:installer": "tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc && cp src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/BoostX_0.4.0_x64-setup.exe landing/download/BoostX-Setup.exe && bash scripts/verify-pe-manifest.sh src-tauri/target/x86_64-pc-windows-msvc/release/boostx.exe",
+    "capture:landing": "npm run build && node scripts/capture-landing-screenshots.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/plugin-opener": "^2.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "playwright": "^1.64.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^3.2.7"
+  }
+}
