@@ -86,6 +86,14 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
             Some("ephemeral — no persistent ON state".into())
         }
         "cs2_preset" | "valorant_preset" | "fortnite_preset" => Some("profile bundle".into()),
+        "net_dns_cloudflare" => Some("DNS change — skipped in automated matrix".into()),
+        "nvidia_low_latency" => {
+            if !report.gpu.vendor.to_lowercase().contains("nvidia") {
+                Some("no NVIDIA GPU on this host".into())
+            } else {
+                None
+            }
+        }
         "hpet_bcdedit" => Some("boot config — manual verify".into()),
         "memory_integrity_warn" => Some("guidance only".into()),
         _ => None,

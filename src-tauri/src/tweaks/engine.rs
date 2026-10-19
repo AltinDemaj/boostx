@@ -336,18 +336,7 @@ fn revert_special(def: &TweakDefinition) -> AppResult<()> {
             }
         }
         "net_initial_rto" => crate::tweaks::netsh_ops::revert_initial_rto()?,
-        "defender_cs2_exclusion" => {
-            #[cfg(windows)]
-            {
-                let _ = crate::platform::powershell::run(
-                    r#"
-$dirs = @()
-try { $cs2 = (Get-ItemProperty 'HKCU:\Software\Valve\Steam' -ErrorAction SilentlyContinue).SteamPath } catch {}
-# Best-effort: exclusions removed manually if needed
-"#,
-                );
-            }
-        }
+        "defender_cs2_exclusion" => crate::tweaks::defender::remove_cs2_folder_exclusions()?,
         "cs2_disable_fullscreen_opt" => crate::tweaks::cs2_compat::revert_cs2_fso()?,
         "timer_resolution" => {
             crate::services::stop_timer_service()?;

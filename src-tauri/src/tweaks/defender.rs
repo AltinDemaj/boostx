@@ -66,6 +66,22 @@ pub fn add_cs2_folder_exclusion() -> AppResult<()> {
     Ok(())
 }
 
+#[cfg(windows)]
+pub fn remove_cs2_folder_exclusions() -> AppResult<()> {
+    let dirs = cs2_exclusion_dirs()?;
+    for dir in &dirs {
+        let path = dir.to_string_lossy().replace('\'', "''");
+        let script = format!("Remove-MpPreference -ExclusionPath '{path}' -ErrorAction SilentlyContinue");
+        let _ = crate::platform::powershell::run(&script)?;
+    }
+    Ok(())
+}
+
+#[cfg(not(windows))]
+pub fn remove_cs2_folder_exclusions() -> AppResult<()> {
+    Ok(())
+}
+
 #[cfg(not(windows))]
 pub fn add_cs2_folder_exclusion() -> AppResult<()> {
     Ok(())
