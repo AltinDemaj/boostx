@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "build:installer": "tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc && cp src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/BoostX_0.4.0_x64-setup.exe landing/download/BoostX-Setup.exe && bash scripts/verify-pe-manifest.sh src-tauri/target/x86_64-pc-windows-msvc/release/boostx.exe",
+    "build:installer": "tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc && cp src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/BoostX_0.5.0_x64-setup.exe landing/download/BoostX-Setup.exe && bash scripts/verify-pe-manifest.sh src-tauri/target/x86_64-pc-windows-msvc/release/boostx.exe",
     "capture:landing": "npm run build && node scripts/capture-landing-screenshots.mjs",
     "test": "vitest run"
   },
