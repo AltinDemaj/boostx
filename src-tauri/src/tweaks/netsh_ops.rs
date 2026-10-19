@@ -38,6 +38,11 @@ pub fn set_ecn_disabled() -> AppResult<()> {
     Ok(())
 }
 
+pub fn set_ecn_default() -> AppResult<()> {
+    run_hidden_ok("netsh", &["interface", "tcp", "set", "global", "ecncapability=default"])?;
+    Ok(())
+}
+
 pub fn set_rss_enabled() -> AppResult<()> {
     run_hidden_ok("netsh", &["interface", "tcp", "set", "global", "rss=enabled"])?;
     Ok(())

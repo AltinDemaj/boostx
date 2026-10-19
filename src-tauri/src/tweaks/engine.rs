@@ -335,6 +335,7 @@ fn revert_special(def: &TweakDefinition) -> AppResult<()> {
                 crate::platform::power_snapshot::restore(&snap)?;
             }
         }
+        "net_tcp_ecn_off" => crate::tweaks::netsh_ops::set_ecn_default()?,
         "net_initial_rto" => crate::tweaks::netsh_ops::revert_initial_rto()?,
         "defender_cs2_exclusion" => crate::tweaks::defender::remove_cs2_folder_exclusions()?,
         "cs2_disable_fullscreen_opt" => crate::tweaks::cs2_compat::revert_cs2_fso()?,
