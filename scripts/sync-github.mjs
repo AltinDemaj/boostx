@@ -60,11 +60,5 @@ const newTree = await gh(`/repos/${owner}/${repo}/git/trees`, {
   tree,
 });
 
-const newCommit = await gh(`/repos/${owner}/${repo}/git/commits`, {
-  message: `sync from workspace ${new Date().toISOString()}`,
-  tree: newTree.sha,
-  parents: [baseSha],
-});
-
-await gh(`/repos/${owner}/${repo}/git/refs/heads/${branch}`, { sha: newCommit.sha, force: true }, "PATCH");
+const newCommit = await gh(`/repos/${owner}/${repo}/git/refs/heads/${branch}`, { sha: newCommit.sha, force: true }, "PATCH");
 console.log("Pushed", files.length, "files to", `${owner}/${repo}@${branch}`);
