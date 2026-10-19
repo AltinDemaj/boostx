@@ -105,6 +105,12 @@ fn detect_by_id(id: &str) -> Option<DetectedState> {
                 Err(_) => DetectedState::Unknown,
             })
         }
+        "net_initial_rto" => Some(match crate::tweaks::netsh_ops::detect_initial_rto_ms() {
+            Ok(Some(v)) if v <= 300 => DetectedState::On,
+            Ok(Some(_)) => DetectedState::Off,
+            Ok(None) => DetectedState::Off,
+            Err(_) => DetectedState::Unknown,
+        }),
         "defender_cs2_exclusion" => Some(match crate::tweaks::defender::cs2_install_dir_excluded() {
             Ok(true) => DetectedState::On,
             Ok(false) => DetectedState::Off,

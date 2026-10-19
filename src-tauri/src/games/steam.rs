@@ -15,8 +15,21 @@ pub struct InstalledGame {
     pub platform: String,
 }
 
+fn sim_cs2_exe() -> Option<std::path::PathBuf> {
+    if let Ok(p) = std::env::var("BOOSTX_SIM_CS2") {
+        let path = std::path::PathBuf::from(p);
+        if path.exists() {
+            return Some(path);
+        }
+    }
+    None
+}
+
 #[cfg(windows)]
 pub fn find_cs2_install() -> AppResult<std::path::PathBuf> {
+    if let Some(sim) = sim_cs2_exe() {
+        return Ok(sim);
+    }
     for library in steam_library_roots()? {
         let common = library.join("steamapps").join("common");
         for entry in std::fs::read_dir(&common)? {
@@ -46,6 +59,9 @@ pub fn find_cs2_install() -> AppResult<std::path::PathBuf> {
 
 #[cfg(not(windows))]
 pub fn find_cs2_install() -> AppResult<std::path::PathBuf> {
+    if let Some(sim) = sim_cs2_exe() {
+        return Ok(sim);
+    }
     Err(AppError::msg("CS2 not installed"))
 }
 

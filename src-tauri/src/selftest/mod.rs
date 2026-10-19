@@ -76,11 +76,10 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
     if !hardware_matches(def, report) {
         return Some("not applicable on this hardware".into());
     }
-    if def.id == "defender_cs2_exclusion" && !crate::tweaks::defender::cs2_install_path_exists() {
-        return Some("CS2 not installed".into());
-    }
-    if def.id == "cs2_disable_fullscreen_opt" && !crate::tweaks::defender::cs2_install_path_exists() {
-        return Some("CS2 not installed".into());
+    if (def.id == "defender_cs2_exclusion" || def.id == "cs2_disable_fullscreen_opt")
+        && !crate::tweaks::defender::cs2_install_path_exists()
+    {
+        return Some("CS2 not installed (set BOOSTX_SIM_CS2 to a cs2.exe path on CI)".into());
     }
     match def.id.as_str() {
         "standby_list_clean" | "temp_cleanup" | "pagefile_system_managed" => {

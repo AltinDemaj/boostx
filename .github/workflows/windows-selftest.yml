@@ -26,6 +26,15 @@ jobs:
         env:
           CI: true
 
+      - name: Simulate CS2 install for game-specific tweaks
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP "boostx-cs2-sim"
+          $exe = Join-Path $root "game\bin\win64\cs2.exe"
+          New-Item -ItemType Directory -Force -Path (Split-Path $exe) | Out-Null
+          Set-Content -Path $exe -Value "sim" -Encoding ascii
+          echo "BOOSTX_SIM_CS2=$exe" >> $env:GITHUB_ENV
+
       - name: Run tweak selftest (elevated runner)
         shell: pwsh
         env:
