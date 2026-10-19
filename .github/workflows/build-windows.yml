@@ -1,0 +1,40 @@
+name: Build Windows installer
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri bundles (MSI / NSIS)
+        run: npm run tauri build
+        env:
+          CI: true
+
+      - name: Stage landing download
+        run: |
+          mkdir -p landing/download
+          cp src-tauri/target/release/bundle/nsis/*.exe landing/download/BoostX-Setup.exe
+
+      - name: Upload installer artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: boostx-windows-installers
+          path: |
+            landing/download/BoostX-Setup.exe
+            src-tauri/target/release/bundle/nsis/*.exe
