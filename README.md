@@ -58,7 +58,7 @@ The app requests **administrator** elevation via its manifest. Accept the UAC pr
 
 ```bash
 npm install
-npm run tauri build
+npm run tauri dev
 ```
 
 Installers are written under:
