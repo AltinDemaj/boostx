@@ -43,7 +43,9 @@ jobs:
           $exe = Get-ChildItem -Recurse -Filter "boostx.exe" src-tauri/target/release | Select-Object -First 1
           if (-not $exe) { throw "boostx.exe not found" }
           & $exe.FullName --selftest --report selftest-report.md
+          if (-not (Test-Path selftest-report.md)) { throw "selftest-report.md not written" }
           Get-Content selftest-report.md | Select-Object -First 40
+          if (Test-Path selftest-report.json) { Get-Content selftest-report.json | Select-Object -First 5 }
 
       - name: Upload selftest report
         uses: actions/upload-artifact@v4
