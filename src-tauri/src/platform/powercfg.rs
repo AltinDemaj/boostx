@@ -85,3 +85,16 @@ pub fn set_core_parking_min_percent(percent: u32) -> AppResult<()> {
 pub fn set_perfboost_mode(mode: u32) -> AppResult<()> {
     set_ac_value(SUB_PROCESSOR, PERF_BOOST, mode)
 }
+
+/// True when `powercfg /query` can read this subgroup setting on the active scheme.
+pub fn setting_query_supported(subgroup: &str, setting: &str) -> bool {
+    query_setting(subgroup, setting).is_ok()
+}
+
+pub fn processor_min_setting_supported() -> bool {
+    setting_query_supported(SUB_PROCESSOR, PROC_MIN)
+}
+
+pub fn processor_boost_setting_supported() -> bool {
+    setting_query_supported(SUB_PROCESSOR, PERF_BOOST)
+}

@@ -11,8 +11,11 @@ pub fn detect_autotun_normal() -> AppResult<bool> {
 }
 
 pub fn detect_ecn_disabled() -> AppResult<bool> {
-    let out = netsh_tcp_show()?.to_lowercase();
-    Ok(out.contains("ecncapability") && out.contains("disabled"))
+    let out = netsh_tcp_show()?;
+    Ok(out.lines().any(|line| {
+        let l = line.to_lowercase();
+        l.contains("ecn") && l.contains("disabled")
+    }))
 }
 
 pub fn detect_rss_enabled() -> AppResult<bool> {

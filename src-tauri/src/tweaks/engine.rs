@@ -338,6 +338,19 @@ fn revert_special(def: &TweakDefinition) -> AppResult<()> {
         "net_initial_rto" => crate::tweaks::netsh_ops::revert_initial_rto()?,
         "defender_cs2_exclusion" => crate::tweaks::defender::remove_cs2_folder_exclusions()?,
         "cs2_disable_fullscreen_opt" => crate::tweaks::cs2_compat::revert_cs2_fso()?,
+        "network_nagle_nic" => {
+            #[cfg(windows)]
+            {
+                let script = r#"
+$ifaces = Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces' -ErrorAction SilentlyContinue
+foreach ($k in $ifaces) {
+  Remove-ItemProperty -Path $k.PSPath -Name 'TcpAckFrequency' -ErrorAction SilentlyContinue
+  Remove-ItemProperty -Path $k.PSPath -Name 'TCPNoDelay' -ErrorAction SilentlyContinue
+}
+"#;
+                let _ = crate::platform::powershell::run(script)?;
+            }
+        }
         "timer_resolution" => {
             crate::services::stop_timer_service()?;
             crate::services::set_timer_policy(&crate::services::TimerPolicy {

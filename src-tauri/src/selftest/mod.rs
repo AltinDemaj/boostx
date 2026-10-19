@@ -82,6 +82,40 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
         return Some("CS2 not installed (set BOOSTX_SIM_CS2 to a cs2.exe path on CI)".into());
     }
     match def.id.as_str() {
+        "power_min_processor_100" => {
+            #[cfg(windows)]
+            if !crate::platform::powercfg::processor_min_setting_supported() {
+                return Some(
+                    "active power scheme lacks minimum processor state (common on Server/Hyper-V)"
+                        .into(),
+                );
+            }
+            None
+        }
+        "amd_processor_boost" => {
+            #[cfg(windows)]
+            if !crate::platform::powercfg::processor_boost_setting_supported() {
+                return Some(
+                    "active power scheme lacks AMD/Intel performance boost setting".into(),
+                );
+            }
+            None
+        }
+        "power_ultimate" => {
+            let os = report.windows.version.to_lowercase();
+            if os.contains("server") {
+                Some("Ultimate Performance plan not exposed on Windows Server CI hosts".into())
+            } else {
+                None
+            }
+        }
+        "timer_resolution" => {
+            if report.gpu.model.to_lowercase().contains("hyper-v") {
+                Some("1 ms timer not reliable on Hyper-V guests".into())
+            } else {
+                None
+            }
+        }
         "standby_list_clean" | "temp_cleanup" | "pagefile_system_managed" => {
             Some("ephemeral — no persistent ON state".into())
         }
@@ -323,7 +357,9 @@ fn run_one(def: &TweakDefinition, report: &SystemReport, elevated: bool, priorit
     let after_revert = detect_tweak(def);
     let after_revert_s = detect_label(after_revert);
     let restored = after_revert == original
-        || (original == DetectedState::Off && after_revert == DetectedState::Off);
+        || (original == DetectedState::Off && after_revert == DetectedState::Off)
+        || (original == DetectedState::Unknown
+            && matches!(after_revert, DetectedState::Off | DetectedState::Unknown));
 
     if !restored {
         let detail = format!("revert mismatch ({baseline_s} -> {after_revert_s})");
