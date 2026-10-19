@@ -2,8 +2,11 @@ mod cs2;
 pub mod live;
 mod history;
 mod pipeline;
+mod short;
 mod suite;
 mod telemetry;
+
+pub use short::{run_short_benchmark, ShortBenchSample};
 
 pub use cs2::{run_competitive_benchmark, BenchmarkPhaseInput, Cs2CompetitiveResult};
 pub use history::{
