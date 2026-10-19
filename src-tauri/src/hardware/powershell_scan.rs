@@ -31,10 +31,10 @@ try { $ramSpeed = (Get-CimInstance Win32_PhysicalMemory | Select-Object -First 1
   cpu = @{
     vendor = $cpu.Manufacturer
     model = $cpu.Name.Trim()
-    cores = [uint32]$cpu.NumberOfCores
-    logicalProcessors = [uint32]$cpu.NumberOfLogicalProcessors
+    cores = if ($cpu.NumberOfCores) { [uint32]$cpu.NumberOfCores } else { 0 }
+    logicalProcessors = if ($cpu.NumberOfLogicalProcessors) { [uint32]$cpu.NumberOfLogicalProcessors } else { 0 }
     generationHint = ''
-    baseClockMhz = [uint32]$cpu.MaxClockSpeed
+    baseClockMhz = if ($cpu.MaxClockSpeed) { [uint32]$cpu.MaxClockSpeed } else { $null }
   }
   gpu = if ($gpu) {
     @{
@@ -134,7 +134,6 @@ fn normalize_wmi_json(v: &mut Value) {
         ensure_json_array(obj, "monitors");
         ensure_json_array(obj, "scanWarnings");
     }
-    replace_json_nulls_with_empty_strings(v);
 }
 
 fn ensure_json_array(obj: &mut Map<String, Value>, key: &str) {
@@ -143,23 +142,6 @@ fn ensure_json_array(obj: &mut Map<String, Value>, key: &str) {
     };
     if val.is_object() {
         obj.insert(key.to_string(), Value::Array(vec![val]));
-    }
-}
-
-fn replace_json_nulls_with_empty_strings(v: &mut Value) {
-    match v {
-        Value::Null => *v = Value::String(String::new()),
-        Value::Array(items) => {
-            for item in items {
-                replace_json_nulls_with_empty_strings(item);
-            }
-        }
-        Value::Object(map) => {
-            for (_, item) in map {
-                replace_json_nulls_with_empty_strings(item);
-            }
-        }
-        _ => {}
     }
 }
 
