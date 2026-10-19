@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::hardware::{detect_rebar, RebarDetection, SystemReport};
+use crate::hardware::{detect_rebar, RebarStatus, SystemReport};
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
@@ -61,18 +61,21 @@ pub fn build_interactive(report: &SystemReport) -> InteractiveBiosReport {
         BiosSettingStatus::Unknown
     };
 
-    let rebar = detect_rebar(report);
+    let rebar = detect_rebar(report).unwrap_or_else(|_| crate::hardware::RebarDetection {
+        status: RebarStatus::Unknown,
+        detail: "Could not query ReBAR state".into(),
+    });
 
     let settings = base
         .items
         .into_iter()
         .map(|item| {
             let verified = item.id == "xmp_expo" && xmp_verified;
-            let rebar_status = match rebar.detection {
-                RebarDetection::Enabled => BiosSettingStatus::Optimal,
-                RebarDetection::Disabled => BiosSettingStatus::Suboptimal,
-                RebarDetection::Unknown => BiosSettingStatus::Unknown,
-                RebarDetection::NotApplicable => BiosSettingStatus::FirmwareOnly,
+            let rebar_status = match rebar.status {
+                RebarStatus::Enabled => BiosSettingStatus::Optimal,
+                RebarStatus::Disabled => BiosSettingStatus::Suboptimal,
+                RebarStatus::Unknown => BiosSettingStatus::Unknown,
+                RebarStatus::NotApplicable => BiosSettingStatus::FirmwareOnly,
             };
             InteractiveBiosSetting {
                 id: item.id.clone(),
@@ -104,7 +107,7 @@ pub fn build_interactive(report: &SystemReport) -> InteractiveBiosReport {
                         )
                     }
                 } else if item.id == "resizable_bar" {
-                    format!("{} ({})", rebar.detail, rebar.method)
+                    rebar.detail.clone()
                 } else if post_reboot_pending {
                     "Re-scan after firmware — confirm manually in BIOS".into()
                 } else {

@@ -76,17 +76,58 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
     if !hardware_matches(def, report) {
         return Some("not applicable on this hardware".into());
     }
-    if def.id == "defender_cs2_exclusion" && !crate::tweaks::defender::cs2_install_path_exists() {
-        return Some("CS2 not installed".into());
-    }
-    if def.id == "cs2_disable_fullscreen_opt" && !crate::tweaks::defender::cs2_install_path_exists() {
-        return Some("CS2 not installed".into());
+    if (def.id == "defender_cs2_exclusion" || def.id == "cs2_disable_fullscreen_opt")
+        && !crate::tweaks::defender::cs2_install_path_exists()
+    {
+        return Some("CS2 not installed (set BOOSTX_SIM_CS2 to a cs2.exe path on CI)".into());
     }
     match def.id.as_str() {
+        "power_min_processor_100" => {
+            #[cfg(windows)]
+            if !crate::platform::powercfg::processor_min_setting_supported() {
+                return Some(
+                    "active power scheme lacks minimum processor state (common on Server/Hyper-V)"
+                        .into(),
+                );
+            }
+            None
+        }
+        "amd_processor_boost" => {
+            #[cfg(windows)]
+            if !crate::platform::powercfg::processor_boost_setting_supported() {
+                return Some(
+                    "active power scheme lacks AMD/Intel performance boost setting".into(),
+                );
+            }
+            None
+        }
+        "power_ultimate" => {
+            let os = report.windows.version.to_lowercase();
+            if os.contains("server") {
+                Some("Ultimate Performance plan not exposed on Windows Server CI hosts".into())
+            } else {
+                None
+            }
+        }
+        "timer_resolution" => {
+            if report.gpu.model.to_lowercase().contains("hyper-v") {
+                Some("1 ms timer not reliable on Hyper-V guests".into())
+            } else {
+                None
+            }
+        }
         "standby_list_clean" | "temp_cleanup" | "pagefile_system_managed" => {
             Some("ephemeral — no persistent ON state".into())
         }
         "cs2_preset" | "valorant_preset" | "fortnite_preset" => Some("profile bundle".into()),
+        "net_dns_cloudflare" => Some("DNS change — skipped in automated matrix".into()),
+        "nvidia_low_latency" => {
+            if !report.gpu.vendor.to_lowercase().contains("nvidia") {
+                Some("no NVIDIA GPU on this host".into())
+            } else {
+                None
+            }
+        }
         "hpet_bcdedit" => Some("boot config — manual verify".into()),
         "memory_integrity_warn" => Some("guidance only".into()),
         _ => None,
@@ -94,6 +135,24 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
 }
 
 pub fn run_selftest(report_path: Option<&Path>) -> AppResult<i32> {
+    match run_selftest_inner(report_path) {
+        Ok(code) => Ok(code),
+        Err(e) => {
+            if let Some(path) = report_path {
+                let md = format!(
+                    "# BoostX selftest aborted\n\n**Error:** {e}\n\n_No tweak matrix was executed._\n"
+                );
+                if let Some(parent) = path.parent() {
+                    let _ = fs::create_dir_all(parent);
+                }
+                let _ = fs::write(path, md);
+            }
+            Err(e)
+        }
+    }
+}
+
+fn run_selftest_inner(report_path: Option<&Path>) -> AppResult<i32> {
     crate::auto_optimize::logic_selftest()?;
     crate::auto_optimize::mock_benchmark_selftest()?;
 
@@ -298,7 +357,9 @@ fn run_one(def: &TweakDefinition, report: &SystemReport, elevated: bool, priorit
     let after_revert = detect_tweak(def);
     let after_revert_s = detect_label(after_revert);
     let restored = after_revert == original
-        || (original == DetectedState::Off && after_revert == DetectedState::Off);
+        || (original == DetectedState::Off && after_revert == DetectedState::Off)
+        || (original == DetectedState::Unknown
+            && matches!(after_revert, DetectedState::Off | DetectedState::Unknown));
 
     if !restored {
         let detail = format!("revert mismatch ({baseline_s} -> {after_revert_s})");

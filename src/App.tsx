@@ -398,7 +398,7 @@ export default function App() {
               busy={busy}
               onRefresh={refresh}
               onToast={showToast}
-              onApplyProfile={async (p) => {
+              onApplyProfile={async (p: OptimizationProfile) => {
                 await applyProfile(p);
               }}
             />
