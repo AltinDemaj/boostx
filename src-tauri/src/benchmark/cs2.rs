@@ -1,1 +1,1 @@
-file:///workspace/src-tauri/src/benchmark/cs2.rs
+__READ__/workspace/src-tauri/src/benchmark/cs2.rs
