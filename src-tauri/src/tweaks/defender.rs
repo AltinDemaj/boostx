@@ -83,11 +83,11 @@ fn path_is_defender_excluded(path: &Path) -> AppResult<bool> {
                 r#"
 $p = (Resolve-Path '{norm}' -ErrorAction SilentlyContinue).Path
 if (-not $p) {{ exit 2 }}
-$p = $p.TrimEnd('\\').ToLower()
+$p = $p.TrimEnd('\').ToLower()
 $eps = @(Get-MpPreference -ErrorAction SilentlyContinue).ExclusionPath
 if (-not $eps) {{ '0'; exit }}
 foreach ($e in $eps) {{
-  $x = $e.TrimEnd('\\').ToLower()
+  $x = $e.TrimEnd('\').ToLower()
   if ($x -eq $p -or $x.StartsWith($p) -or $p.StartsWith($x)) {{ '1'; exit }}
 }}
 '0'
