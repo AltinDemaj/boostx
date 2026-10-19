@@ -126,7 +126,7 @@ fn scan_library(root: &Path) -> AppResult<Vec<InstalledGame>> {
 }
 
 fn guess_app_id(folder_name: &str) -> String {
-    let lower = folder_name.to_lower_case();
+    let lower = folder_name.to_lowercase();
     if lower.contains("counter-strike") || lower == "csgo" {
         "730".into()
     } else if lower.contains("valorant") {
