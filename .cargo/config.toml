@@ -1,2 +1,7 @@
 [target.x86_64-pc-windows-msvc]
-linker = "rust-lld"
+rustflags = [
+  "-C",
+  "link-arg=/MANIFESTUAC:level=requireAdministrator",
+  "-C",
+  "link-arg=/MANIFESTUAC:uiAccess=false",
+]

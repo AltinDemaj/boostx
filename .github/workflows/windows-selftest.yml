@@ -1,18 +1,45 @@
-name: Windows Selftest
+name: Windows selftest
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
 
 jobs:
   selftest:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - uses: dtolnay/rust-toolchain@stable
-      - run: npm ci
-      - run: npm run tauri build
-      - name: Run selftest
-        run: .\src-tauri\target\release\boostx.exe --selftest
+          node-version: 22
+          cache: npm
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build release binary
+        run: npm run tauri build -- --no-bundle
+        env:
+          CI: true
+
+      - name: Run tweak selftest (elevated runner)
+        shell: pwsh
+        env:
+          BOOSTX_MOCK_BENCH: "1"
+        run: |
+          $exe = Get-ChildItem -Recurse -Filter "boostx.exe" src-tauri/target/release | Select-Object -First 1
+          if (-not $exe) { throw "boostx.exe not found" }
+          & $exe.FullName --selftest --report selftest-report.md
+          Get-Content selftest-report.md | Select-Object -First 40
+
+      - name: Upload selftest report
+        uses: actions/upload-artifact@v4
+        with:
+          name: boostx-selftest-report
+          path: |
+            selftest-report.md
+            selftest-report.json
