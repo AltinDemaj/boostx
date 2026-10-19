@@ -35,11 +35,15 @@ try { $ramSpeed = (Get-CimInstance Win32_PhysicalMemory | Select-Object -First 1
     generationHint = ''
     baseClockMhz = [uint32]$cpu.MaxClockSpeed
   }
-  gpu = @{
-    vendor = if ($gpu.AdapterCompatibility) { $gpu.AdapterCompatibility } else { 'GPU' }
-    model = $gpu.Name
-    vramMb = if ($gpu.AdapterRAM) { [uint32]($gpu.AdapterRAM / 1MB) } else { $null }
-    driverVersion = $gpu.DriverVersion
+  gpu = if ($gpu) {
+    @{
+      vendor = if ($gpu.AdapterCompatibility) { $gpu.AdapterCompatibility } else { 'GPU' }
+      model = $gpu.Name
+      vramMb = if ($gpu.AdapterRAM) { [uint32]($gpu.AdapterRAM / 1MB) } else { $null }
+      driverVersion = $gpu.DriverVersion
+    }
+  } else {
+    @{ vendor = 'GPU'; model = 'Unknown'; vramMb = $null; driverVersion = $null }
   }
   ram = @{
     totalGb = [double]($cs.TotalPhysicalMemory / 1GB)

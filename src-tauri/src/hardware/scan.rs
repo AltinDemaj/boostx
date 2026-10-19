@@ -87,11 +87,18 @@ pub struct SystemReport {
     pub motherboard: MotherboardInfo,
     pub monitors: Vec<MonitorInfo>,
     pub windows: WindowsInfo,
+    /// Filled after WMI JSON parse (PowerShell omits these fields).
+    #[serde(default)]
     pub performance_score: u32,
+    #[serde(default)]
     pub score_breakdown: Vec<ScoreFactor>,
+    #[serde(default)]
     pub scanned_at: String,
+    #[serde(default)]
     pub is_demo_data: bool,
+    #[serde(default)]
     pub scan_method: String,
+    #[serde(default)]
     pub scan_warnings: Vec<String>,
 }
 
