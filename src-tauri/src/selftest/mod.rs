@@ -101,6 +101,24 @@ fn skip_reason(def: &TweakDefinition, report: &SystemReport) -> Option<String> {
 }
 
 pub fn run_selftest(report_path: Option<&Path>) -> AppResult<i32> {
+    match run_selftest_inner(report_path) {
+        Ok(code) => Ok(code),
+        Err(e) => {
+            if let Some(path) = report_path {
+                let md = format!(
+                    "# BoostX selftest aborted\n\n**Error:** {e}\n\n_No tweak matrix was executed._\n"
+                );
+                if let Some(parent) = path.parent() {
+                    let _ = fs::create_dir_all(parent);
+                }
+                let _ = fs::write(path, md);
+            }
+            Err(e)
+        }
+    }
+}
+
+fn run_selftest_inner(report_path: Option<&Path>) -> AppResult<i32> {
     crate::auto_optimize::logic_selftest()?;
     crate::auto_optimize::mock_benchmark_selftest()?;
 

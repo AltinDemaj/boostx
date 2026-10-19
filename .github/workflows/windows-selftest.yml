@@ -42,10 +42,16 @@ jobs:
         run: |
           $exe = Get-ChildItem -Recurse -Filter "boostx.exe" src-tauri/target/release | Select-Object -First 1
           if (-not $exe) { throw "boostx.exe not found" }
-          & $exe.FullName --selftest --report selftest-report.md
-          if (-not (Test-Path selftest-report.md)) { throw "selftest-report.md not written" }
-          Get-Content selftest-report.md | Select-Object -First 40
+          & $exe.FullName --selftest --report selftest-report.md 2>&1 | Tee-Object -FilePath selftest-console.log
+          $code = $LASTEXITCODE
+          if (-not (Test-Path selftest-report.md)) {
+            if (Test-Path selftest-console.log) { Get-Content selftest-console.log }
+            throw "selftest-report.md not written (exit $code)"
+          }
+          Get-Content selftest-report.md | Select-Object -First 80
           if (Test-Path selftest-report.json) { Get-Content selftest-report.json | Select-Object -First 5 }
+          if ($code -eq 2) { throw "selftest aborted with error (see report)" }
+          if ($code -ne 0) { throw "selftest matrix reported failures (exit $code)" }
 
       - name: Upload selftest report
         uses: actions/upload-artifact@v4

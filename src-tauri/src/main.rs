@@ -4,6 +4,13 @@
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.iter().any(|a| a == "--selftest") {
+        #[cfg(windows)]
+        {
+            use windows::Win32::System::Console::AllocConsole;
+            unsafe {
+                let _ = AllocConsole();
+            }
+        }
         let report = args
             .windows(2)
             .find(|w| w[0] == "--report")

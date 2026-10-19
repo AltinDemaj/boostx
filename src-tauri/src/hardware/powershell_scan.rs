@@ -1,6 +1,7 @@
 use chrono::Utc;
+use serde_json::{Map, Value};
 
-use crate::error::AppResult;
+use crate::error::{AppError, AppResult};
 use crate::hardware::scan::{
     CpuInfo, GpuInfo, MonitorInfo, MotherboardInfo, RamInfo, StorageInfo, SystemReport, WindowsInfo,
 };
@@ -76,8 +77,14 @@ try { $ramSpeed = (Get-CimInstance Win32_PhysicalMemory | Select-Object -First 1
 } | ConvertTo-Json -Compress -Depth 6
 "#;
 
-    let v = run_json(script)?;
-    let mut report: SystemReport = serde_json::from_value(v)?;
+    let mut v = run_json(script)?;
+    if v.is_null() {
+        return Err(AppError::msg("WMI hardware scan returned empty output"));
+    }
+    normalize_wmi_json(&mut v);
+    let mut report: SystemReport = serde_json::from_value(v).map_err(|e| {
+        AppError::msg(format!("WMI hardware scan JSON: {e}"))
+    })?;
     if report.cpu.generation_hint.is_empty() {
         report.cpu.generation_hint = guess_cpu_gen(&report.cpu.model);
     }
@@ -119,6 +126,41 @@ try { $ramSpeed = (Get-CimInstance Win32_PhysicalMemory | Select-Object -First 1
     report.performance_score = score;
     report.score_breakdown = breakdown;
     Ok(report)
+}
+
+fn normalize_wmi_json(v: &mut Value) {
+    if let Some(obj) = v.as_object_mut() {
+        ensure_json_array(obj, "storage");
+        ensure_json_array(obj, "monitors");
+        ensure_json_array(obj, "scanWarnings");
+    }
+    replace_json_nulls_with_empty_strings(v);
+}
+
+fn ensure_json_array(obj: &mut Map<String, Value>, key: &str) {
+    let Some(val) = obj.get(key).cloned() else {
+        return;
+    };
+    if val.is_object() {
+        obj.insert(key.to_string(), Value::Array(vec![val]));
+    }
+}
+
+fn replace_json_nulls_with_empty_strings(v: &mut Value) {
+    match v {
+        Value::Null => *v = Value::String(String::new()),
+        Value::Array(items) => {
+            for item in items {
+                replace_json_nulls_with_empty_strings(item);
+            }
+        }
+        Value::Object(map) => {
+            for (_, item) in map {
+                replace_json_nulls_with_empty_strings(item);
+            }
+        }
+        _ => {}
+    }
 }
 
 fn guess_cpu_gen(model: &str) -> String {
