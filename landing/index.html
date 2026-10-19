@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BoostX — Competitive PC optimizer for Windows</title>
+    <meta
+      name="description"
+      content="BoostX v0.5.0: one-click Auto Optimize with measured A/B benchmarks, expanded tweak catalog, CS2 PresentMon benchmark, BIOS assistant, and full revert safety."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <header class="wrap">
+      <nav>
+        <div class="logo">BoostX</div>
+        <div>
+          <a href="#how">How it works</a>
+          <a href="#demo">Try toggles</a>
+          <a href="#screens">Screenshots</a>
+          <a href="#features">Features</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="wrap hero">
+        <div class="reveal">
+          <p class="badge">v0.5.0 · Auto Optimize · CS2 PresentMon benchmark</p>
+          <h1>Scan. Toggle. Benchmark. Win rounds.</h1>
+          <p class="lead">
+            BoostX is a Windows performance coach for ranked FPS — hardware-aware tweaks with per-setting
+            revert, PresentMon CS2 capture when installed, and BIOS guides that never touch firmware.
+          </p>
+          <div class="cta-row">
+            <a class="btn-primary" href="/download/BoostX-Setup.exe" download>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 3v12m0 0l4-4m-4 4l-4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Download for Windows
+            </a>
+            <span class="meta" id="installer-meta">Loading installer info…</span>
+          </div>
+        </div>
+        <div class="hero-shot reveal reveal-delay-1">
+          <img
+            src="/assets/screenshots/dashboard.png"
+            width="1100"
+            height="680"
+            alt="BoostX dashboard showing competitive score and quick profile actions"
+            loading="eager"
+          />
+        </div>
+      </section>
+
+      <section id="how" class="wrap section-pad">
+        <h2 class="section-title reveal">How BoostX works</h2>
+        <p class="section-lead reveal">Five steps from baseline to measurable CS2 gains — every tweak reversible.</p>
+        <ol class="flow" aria-label="How it works">
+          <li class="flow-step reveal" data-step="1">
+            <span class="flow-icon">1</span>
+            <h3>Scan</h3>
+            <p>WMI + CIM hardware inventory, performance score, and CS2-oriented impact hints.</p>
+          </li>
+          <li class="flow-step reveal reveal-delay-1" data-step="2">
+            <span class="flow-icon">2</span>
+            <h3>Toggle tweaks</h3>
+            <p>Searchable catalog — power, GPU, latency, network, input — with backup before each change.</p>
+          </li>
+          <li class="flow-step reveal reveal-delay-2" data-step="3">
+            <span class="flow-icon">3</span>
+            <h3>Benchmark CS2</h3>
+            <p>Avg FPS, 1% / 0.1% lows, jitter, and latency — PresentMon when CS2 is installed.</p>
+          </li>
+          <li class="flow-step reveal reveal-delay-3" data-step="4">
+            <span class="flow-icon">4</span>
+            <h3>BIOS guide</h3>
+            <p>Vendor menu paths for XMP, ReBAR, and PBO — reboot to firmware, you stay in control.</p>
+          </li>
+          <li class="flow-step reveal reveal-delay-4" data-step="5">
+            <span class="flow-icon">5</span>
+            <h3>See gains</h3>
+            <p>History chart tracks baseline → tweaks → BIOS. Safe mode can auto-revert on regression.</p>
+          </li>
+        </ol>
+        <div class="flow-progress" aria-hidden="true"><div class="flow-progress-bar" id="flow-bar"></div></div>
+      </section>
+
+      <section id="demo" class="wrap section-pad">
+        <h2 class="section-title reveal">Interactive tweak demo</h2>
+        <p class="section-lead reveal">Flip a few competitive toggles — same UX as the desktop app (preview only, no system changes).</p>
+        <div class="toggle-demo reveal">
+          <div class="toggle-demo-row" data-demo-toggle>
+            <div>
+              <strong>Disable mouse acceleration</strong>
+              <span class="impact-pill impact-high">High CS2 impact</span>
+              <p class="meta">1:1 pointer for consistent flicks.</p>
+            </div>
+            <button type="button" class="toggle-switch is-on" aria-pressed="true" aria-label="Toggle mouse acceleration"></button>
+          </div>
+          <div class="toggle-demo-row" data-demo-toggle>
+            <div>
+              <strong>MMCSS Games task priority</strong>
+              <span class="impact-pill impact-med">Medium</span>
+              <p class="meta">Smoother frametimes under load.</p>
+            </div>
+            <button type="button" class="toggle-switch" aria-pressed="false" aria-label="Toggle MMCSS"></button>
+          </div>
+          <div class="toggle-demo-row" data-demo-toggle>
+            <div>
+              <strong>Disable Nagle per NIC</strong>
+              <span class="impact-pill impact-med">Medium</span>
+              <p class="meta">Lower network latency for hit reg.</p>
+            </div>
+            <button type="button" class="toggle-switch is-on" aria-pressed="true" aria-label="Toggle Nagle"></button>
+          </div>
+          <p class="demo-status meta" id="demo-status">3 tweaks selected · example profile</p>
+        </div>
+      </section>
+
+      <section class="wrap section-pad example-gains">
+        <div class="example-label reveal">Example results — synthetic demo rig, not a guarantee</div>
+        <h2 class="section-title reveal">What players track in v0.5.0</h2>
+        <div class="gains-grid reveal">
+          <div class="gain-card">
+            <span class="gain-metric">Avg FPS</span>
+            <span class="gain-value" data-count-to="312">0</span>
+            <span class="gain-delta">+<span data-count-to="44">0</span> vs baseline</span>
+          </div>
+          <div class="gain-card">
+            <span class="gain-metric">1% lows</span>
+            <span class="gain-value" data-count-to="242">0</span>
+            <span class="gain-delta">+<span data-count-to="32">0</span> vs baseline</span>
+          </div>
+          <div class="gain-card">
+            <span class="gain-metric">Frametime jitter</span>
+            <span class="gain-value" data-count-to="0.8" data-decimals="1">0</span>
+            <span class="gain-delta">ms · lower is better</span>
+          </div>
+        </div>
+        <div class="chart-card reveal">
+          <p class="meta chart-caption">Example CS2 benchmark progression (illustrative)</p>
+          <svg class="gain-chart" viewBox="0 0 400 120" role="img" aria-label="Example bar chart of FPS across phases">
+            <rect class="chart-bar" data-height="68" x="40" y="0" width="48" height="0" rx="4" fill="var(--accent)" />
+            <rect class="chart-bar" data-height="82" x="120" y="0" width="48" height="0" rx="4" fill="var(--accent)" />
+            <rect class="chart-bar chart-bar-alt" data-height="92" x="200" y="0" width="48" height="0" rx="4" fill="var(--accent-2)" />
+            <text x="64" y="110" fill="var(--muted)" font-size="10" text-anchor="middle">Baseline</text>
+            <text x="144" y="110" fill="var(--muted)" font-size="10" text-anchor="middle">Tweaks</text>
+            <text x="224" y="110" fill="var(--muted)" font-size="10" text-anchor="middle">BIOS</text>
+          </svg>
+        </div>
+      </section>
+
+      <section id="screens" class="wrap section-pad">
+        <h2 class="section-title reveal">Real BoostX UI</h2>
+        <p class="section-lead reveal">Captured from the React app with demo data — what you install on Windows.</p>
+        <div class="screenshot-grid">
+          <figure class="screenshot-card reveal hover-lift">
+            <img src="/assets/screenshots/dashboard.png" width="1100" height="680" alt="Dashboard" loading="lazy" />
+            <figcaption>Dashboard & score</figcaption>
+          </figure>
+          <figure class="screenshot-card reveal reveal-delay-1 hover-lift">
+            <img src="/assets/screenshots/optimize.png" width="1100" height="680" alt="Optimize toggles" loading="lazy" />
+            <figcaption>Optimize — real toggle cards</figcaption>
+          </figure>
+          <figure class="screenshot-card reveal reveal-delay-2 hover-lift">
+            <img src="/assets/screenshots/benchmark-live.png" width="1100" height="680" alt="Live CS2 benchmark graphs" loading="lazy" />
+            <figcaption>Live FPS & frametime (PresentMon)</figcaption>
+          </figure>
+          <figure class="screenshot-card reveal reveal-delay-3 hover-lift">
+            <img src="/assets/screenshots/benchmark.png" width="1100" height="680" alt="CS2 benchmark results" loading="lazy" />
+            <figcaption>Benchmark results & pipeline log</figcaption>
+          </figure>
+          <figure class="screenshot-card reveal hover-lift">
+            <img src="/assets/screenshots/performance.png" width="1100" height="680" alt="Performance and hardware boost" loading="lazy" />
+            <figcaption>Affinity watcher & GPU boost</figcaption>
+          </figure>
+          <figure class="screenshot-card reveal reveal-delay-1 hover-lift">
+            <img src="/assets/screenshots/diagnostics.png" width="1100" height="680" alt="Diagnostics detect scan" loading="lazy" />
+            <figcaption>Diagnostics — zero unknowns</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="features" class="wrap section-pad">
+        <h2 class="section-title reveal">Built for competitive FPS</h2>
+        <div class="features">
+          <article class="card hover-lift reveal">
+            <h3>Hardware scan & score</h3>
+            <p>CPU, GPU, RAM speed, storage, BIOS vendor, and refresh rate — with WMI thread-safe scanning on Windows.</p>
+          </article>
+          <article class="card hover-lift reveal reveal-delay-1">
+            <h3>40+ searchable toggles</h3>
+            <p>Impact badges, CS2 notes, categories, custom profiles, and one-click revert per tweak.</p>
+          </article>
+          <article class="card hover-lift reveal reveal-delay-2">
+            <h3>CS2 optimizer</h3>
+            <p>Steam detection, launch options, autoexec, and video presets matched to your GPU tier.</p>
+          </article>
+          <article class="card hover-lift reveal">
+            <h3>Competitive benchmark</h3>
+            <p>PresentMon capture when CS2 is installed; synthetic estimate fallback with full metric suite.</p>
+          </article>
+          <article class="card hover-lift reveal reveal-delay-1">
+            <h3>BIOS assistant</h3>
+            <p>Detect RAM speed vs SPD where possible; vendor-specific firmware checklists only.</p>
+          </article>
+          <article class="card hover-lift reveal reveal-delay-2">
+            <h3>Safety first</h3>
+            <p>Restore point, registry backups, revert all, and safe-mode auto-revert on benchmark regression.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="wrap section-pad">
+        <h2 class="section-title reveal">System requirements</h2>
+        <div class="card reveal">
+          <ul class="meta req-list">
+            <li>Windows 10 or 11 (64-bit)</li>
+            <li>Administrator rights (UAC) for system tweaks</li>
+            <li>Microsoft Edge WebView2 Runtime</li>
+            <li>Steam + CS2 optional (for live benchmark capture)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="faq" class="wrap faq section-pad">
+        <h2 class="section-title reveal">FAQ</h2>
+        <details class="reveal">
+          <summary>Windows SmartScreen says the app is unsigned — is it safe?</summary>
+          <p>
+            BoostX is not yet code-signed. Download only from this page, verify the file name
+            <code>BoostX-Setup.exe</code>, and proceed only if you trust the source.
+          </p>
+        </details>
+        <details class="reveal">
+          <summary>Does BoostX change my BIOS automatically?</summary>
+          <p>
+            No. Firmware is never written from Windows. You get menu paths and optional
+            <code>shutdown /r /fw</code> — changes are manual in UEFI.
+          </p>
+        </details>
+        <details class="reveal">
+          <summary>Can I undo everything?</summary>
+          <p>Per-tweak registry backup, Revert all, and System Restore when available.</p>
+        </details>
+        <details class="reveal">
+          <summary>Will this ban me in CS2 / VALORANT?</summary>
+          <p>
+            BoostX adjusts Windows settings and configs — no game injection. Use at your own discretion.
+          </p>
+        </details>
+      </section>
+
+      <section class="wrap section-pad cta-bottom reveal">
+        <a class="btn-primary" href="/download/BoostX-Setup.exe" download>Download BoostX v0.5.0</a>
+        <p class="meta" style="margin-top: 0.75rem">Free for competitive players on Windows</p>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      <p>© BoostX. Not affiliated with Valve, Riot, or Epic Games.</p>
+    </footer>
+    <script src="/landing.js" defer></script>
+  </body>
+</html>
