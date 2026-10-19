@@ -28,8 +28,6 @@ jobs:
 
       - name: Run tweak selftest (elevated runner)
         shell: pwsh
-        env:
-          BOOSTX_MOCK_BENCH: "1"
         run: |
           $exe = Get-ChildItem -Recurse -Filter "boostx.exe" src-tauri/target/release | Select-Object -First 1
           if (-not $exe) { throw "boostx.exe not found" }
