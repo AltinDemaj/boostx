@@ -59,7 +59,8 @@ if ($null -eq $v) { '0' } else { [string]$v }
         if !out.status.success() {
             return Ok(None);
         }
-        let s = String::from_utf8_lossy(&out.stdout).trim();
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        let s = stdout.trim();
         if s == "0" || s.is_empty() {
             return Ok(None);
         }

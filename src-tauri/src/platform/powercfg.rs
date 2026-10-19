@@ -23,7 +23,8 @@ pub fn active_scheme_is_ultimate() -> AppResult<bool> {
 pub fn set_ultimate_performance() -> AppResult<()> {
     run_hidden_ok("powercfg", &["-duplicatescheme", ULTIMATE_GUID])?;
     let out = run_hidden_ok("powercfg", &["/getactivescheme"])?;
-    let dup = powercfg_parse::parse_active_scheme_guid(&out).unwrap_or(ULTIMATE_GUID);
+    let dup = powercfg_parse::parse_active_scheme_guid(&out)
+        .unwrap_or_else(|| ULTIMATE_GUID.to_string());
     run_hidden_ok("powercfg", &["/setactive", &dup])?;
     Ok(())
 }

@@ -5,7 +5,7 @@ fn competitive() -> Vec<OptimizationProfile> {
     vec![OptimizationProfile::Competitive, OptimizationProfile::Balanced]
 }
 
-fn reg(
+pub(crate) fn reg(
     hive: &str,
     path: &str,
     name: &str,

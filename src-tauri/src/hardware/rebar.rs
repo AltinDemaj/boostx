@@ -8,6 +8,7 @@ pub enum RebarStatus {
     Enabled,
     Disabled,
     Unknown,
+    NotApplicable,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17,7 +18,18 @@ pub struct RebarDetection {
     pub detail: String,
 }
 
-pub fn detect_rebar() -> AppResult<RebarDetection> {
+pub fn detect_rebar(report: &crate::hardware::scan::SystemReport) -> AppResult<RebarDetection> {
+    let gpu = report.gpu.vendor.to_lowercase();
+    if !gpu.contains("nvidia") && !gpu.contains("amd") {
+        return Ok(RebarDetection {
+            status: RebarStatus::NotApplicable,
+            detail: "ReBAR not applicable — discrete GPU not detected".into(),
+        });
+    }
+    detect_rebar_impl()
+}
+
+fn detect_rebar_impl() -> AppResult<RebarDetection> {
     #[cfg(windows)]
     {
         let out = crate::platform::powershell::run(
