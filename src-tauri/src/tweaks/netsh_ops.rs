@@ -12,10 +12,19 @@ pub fn detect_autotun_normal() -> AppResult<bool> {
 
 pub fn detect_ecn_disabled() -> AppResult<bool> {
     let out = netsh_tcp_show()?;
-    Ok(out.lines().any(|line| {
+    for line in out.lines() {
         let l = line.to_lowercase();
-        l.contains("ecn") && l.contains("disabled")
-    }))
+        if !l.contains("ecn") {
+            continue;
+        }
+        if l.contains("disabled") {
+            return Ok(true);
+        }
+        if l.contains("enabled") || l.contains("default") {
+            return Ok(false);
+        }
+    }
+    Ok(false)
 }
 
 pub fn detect_rss_enabled() -> AppResult<bool> {
@@ -39,7 +48,7 @@ pub fn set_ecn_disabled() -> AppResult<()> {
 }
 
 pub fn set_ecn_default() -> AppResult<()> {
-    run_hidden_ok("netsh", &["interface", "tcp", "set", "global", "ecncapability=default"])?;
+    run_hidden_ok("netsh", &["interface", "tcp", "set", "global", "ecncapability=enabled"])?;
     Ok(())
 }
 
