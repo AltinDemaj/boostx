@@ -71,7 +71,7 @@ Installers are written under:
 ```
 src/                 React UI
 src-tauri/src/
-  hardware/          WMI scan + registry inference)
+  hardware/          WMI scan + scoring
   backup/            Restore points + registry backup manifest
   tweaks/            Tweak definitions + apply/revert engine
   games/             Steam detection + CS2 planner
