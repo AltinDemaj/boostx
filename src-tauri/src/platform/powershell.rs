@@ -13,11 +13,15 @@ pub fn run(script: &str) -> AppResult<Output> {
 }
 
 pub fn run_json(script: &str) -> AppResult<Value> {
-    let wrapped = format!("{script} | ConvertTo-Json -Compress -Depth 8");
-    let out = run(&wrapped)?;
+    let out = run(script)?;
     if !out.status.success() {
         let stderr = String::from_utf8_lossy(&out.stderr);
-        return Err(AppError::msg(format!("PowerShell failed: {}", stderr.trim())));
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        return Err(AppError::msg(format!(
+            "PowerShell failed: {} {}",
+            stderr.trim(),
+            stdout.trim()
+        )));
     }
     let stdout = String::from_utf8_lossy(&out.stdout);
     let trimmed = stdout.trim();
