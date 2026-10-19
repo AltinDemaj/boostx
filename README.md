@@ -1,6 +1,6 @@
 # BoostX
 
-**BoostX** is a Windows desktop optimizer for competitive gaming (CS2, VALORANT, Fortnite, and similar titles). It scans your hardware, applies safe Windows tweaks with full backup/revert, surfaces per-game guidance, and walks you through BIOS settings—without ever writing firmware.
+**BoostX** is a Windows desktop optimizer for competitive gaming (CS2, VALORANT, Fortnite, and similar titles). It scans your hardware, applies safe Windows tweaks with full backup/revert, surfaces per-game guidance, and walks you through BIOS settingsâwithout ever writing firmware.
 
 Built with **Tauri 2** (Rust backend) and **React + TypeScript** (dark gaming UI). **Current release: v0.4.0**
 
@@ -21,15 +21,15 @@ Built with **Tauri 2** (Rust backend) and **React + TypeScript** (dark gaming UI
 
 ### Stubbed / limited
 
-- **RAM XMP/EXPO detection** — WMI rarely exposes rated XMP speed; UI flags this when data is missing (BIOS checklist covers enabling XMP/EXPO).
-- **Valorant / Epic / Riot installs** — not auto-detected yet (Steam-focused); extend `src-tauri/src/games/`.
-- **Startup app manager UI** — tweak list includes safe service/visual tweaks; dedicated startup UI not built.
-- **In-game FPS benchmark** — use the built-in quick benchmark plus your own game FPS counter for validation.
-- **Non-Windows hosts** — app runs for UI development with **demo scan data**; tweaks are no-ops.
+- **RAM XMP/EXPO detection** â WMI rarely exposes rated XMP speed; UI flags this when data is missing (BIOS checklist covers enabling XMP/EXPO).
+- **Valorant / Epic / Riot installs** â not auto-detected yet (Steam-focused); extend `src-tauri/src/games/`.
+- **Startup app manager UI** â tweak list includes safe service/visual tweaks; dedicated startup UI not built.
+- **In-game FPS benchmark** â use the built-in quick benchmark plus your own game FPS counter for validation.
+- **Non-Windows hosts** â app runs for UI development with **demo scan data**; tweaks are no-ops.
 
 ## Name note
 
-“BoostX” is the working title. Alternatives if you productize: **FrameForge**, **LatencyLab**, **CompPulse**.
+âBoostXâ is the working title. Alternatives if you productize: **FrameForge**, **LatencyLab**, **CompPulse**.
 
 ## Prerequisites
 
@@ -83,7 +83,7 @@ Backup data is stored under `%LOCALAPPDATA%\BoostX\` on Windows.
 ## Safety
 
 1. A **System Restore** point is attempted before profile application (skipped if restore is disabled by policy).
-2. Each registry tweak backs up the prior value (or “missing”) into `backups.json`.
+2. Each registry tweak backs up the prior value (or âmissingâ) into `backups.json`.
 3. Use **Revert** on a tweak or **Revert all** to restore backed-up values.
 
 Always review BIOS checklist items before changing firmware settings.
